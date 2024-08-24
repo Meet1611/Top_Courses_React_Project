@@ -1,23 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect,useState } from "react";
+import { apiUrl,filterData } from "./data";
+import Navbar from "./components/Navbar";
+import Filter from "./components/Filter";
+import Cards from "./components/Cards";
+import Spinner from "./components/Spinner";
+import { toast } from "react-toastify";
 
-function App() {
+const App = () => {
+
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect( () => {
+    setLoading(true);
+    const fetchData = async () => {
+      try{
+        const res = await fetch(apiUrl);
+        const output = await res.json();
+        setCourses(output.data);
+      }
+      catch(error) {
+        toast.error('Something went wrong');
+      }
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="flex flex-col min-h-screen">
+      <Navbar/>
+      <Filter 
+        filterData={filterData}
+      />
+      <div className="w-11/12 max-w-[1200px] mx-auto flex flex-wrap justify-center items-center min-h-[50vh]">
+        {
+          loading ? (<Spinner></Spinner>) : (<Cards courses={courses}/>)
+        }
+      </div>
     </div>
   );
 }
