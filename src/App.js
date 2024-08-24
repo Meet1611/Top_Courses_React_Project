@@ -10,6 +10,8 @@ const App = () => {
 
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [category, setCategory] = useState(filterData[0].title);
+  const [isLikedClicked, setIsLikedClicked] = useState(false);
 
   useEffect( () => {
     setLoading(true);
@@ -28,15 +30,20 @@ const App = () => {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar/>
-      <Filter 
-        filterData={filterData}
-      />
-      <div className="w-11/12 max-w-[1200px] mx-auto flex flex-wrap justify-center items-center min-h-[50vh]">
-        {
-          loading ? (<Spinner></Spinner>) : (<Cards courses={courses}/>)
-        }
+    <div className="flex flex-col min-h-screen bg-[#42435f]">
+      <Navbar isLikedClicked={isLikedClicked} setIsLikedClicked={setIsLikedClicked} />
+      <div>
+        <Filter 
+          filterData={filterData}
+          category={category}
+          setCategory={setCategory}
+          isLikedClicked={isLikedClicked}
+        />
+        <div className="w-11/12 max-w-[1200px] mx-auto flex flex-wrap justify-center items-center min-h-[50vh]">
+          {
+            loading ? (<Spinner></Spinner>) : (<Cards courses={courses} category={category} isLikedClicked={isLikedClicked} />)
+          }
+        </div>
       </div>
     </div>
   );
